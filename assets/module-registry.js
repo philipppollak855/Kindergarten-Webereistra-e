@@ -1108,6 +1108,14 @@ function initKalenderModules(root, site) {
     }
 }
 
+function initSpeiseplanModules(root, site) {
+    if (!root?.querySelector("[data-mod-speiseplan]")) return;
+    if (typeof mountSpeiseplanSection !== "function") return;
+    root.querySelectorAll("[data-mod-speiseplan]").forEach((section) => {
+        mountSpeiseplanSection(section, site);
+    });
+}
+
 function migrateSiteToLegacyContent(site) {
     return {
         site: { name: site.global.siteName, brandPrefix: site.global.brandPrefix, brandHighlight: site.global.brandHighlight, footer: site.global.footer?.copyright || site.global.footer, nav: {} },

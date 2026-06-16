@@ -112,7 +112,7 @@ function renderPreview() {
     root.innerHTML = renderPage(site, currentPageId);
     initPageCarousels(root);
     initKalenderModules(root, site);
-    if (typeof initSpeiseplanModules === "function") initSpeiseplanModules(root, site);
+    initSpeiseplanModules(root, site);
     initPageTabs(root);
     bindPreviewNavigationGuard(root);
     bindPreviewModuleSelection(root);

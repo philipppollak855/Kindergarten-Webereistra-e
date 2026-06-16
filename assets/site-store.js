@@ -16,10 +16,7 @@ function loadSite() {
     }
     if (typeof ensureLayoutConfig === "function") ensureLayoutConfig(site);
     if (typeof ensureLegalPages === "function") ensureLegalPages(site);
-    if (site?.global) {
-        if (!site.global.speiseplan) site.global.speiseplan = { plans: [] };
-        if (!Array.isArray(site.global.speiseplan.plans)) site.global.speiseplan.plans = [];
-    }
+    if (typeof ensureSpeiseplan === "function") ensureSpeiseplan(site);
     return site;
 }
 
@@ -29,6 +26,21 @@ function saveSite(site) {
 
 function clearSiteOverride() {
     localStorage.removeItem(KG_SITE_STORAGE_KEY);
+}
+
+function ensureSpeiseplan(site) {
+    if (!site?.global) return;
+    const seed = window.KG_SITE?.global?.speiseplan;
+    if (!site.global.speiseplan) {
+        site.global.speiseplan = seed ? structuredClone(seed) : { plans: [] };
+        return;
+    }
+    if (!Array.isArray(site.global.speiseplan.plans)) {
+        site.global.speiseplan.plans = [];
+    }
+    if (!site.global.speiseplan.plans.length && seed?.plans?.length) {
+        site.global.speiseplan.plans = structuredClone(seed.plans);
+    }
 }
 
 function exportSiteJs(site) {

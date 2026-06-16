@@ -44,10 +44,10 @@ function bootPage() {
     if (root) {
         renderLayout(site, pageId);
         root.innerHTML = renderPage(site, pageId);
-    initPageCarousels(root);
-    initKalenderModules(root, site);
-    if (typeof initSpeiseplanModules === "function") initSpeiseplanModules(root, site);
-    initPageTabs(root);
+        initPageCarousels(root);
+        initKalenderModules(root, site);
+        initSpeiseplanModules(root, site);
+        initPageTabs(root);
 
         if (typeof initReveal === "function") initReveal(root);
         else if ("IntersectionObserver" in window) {

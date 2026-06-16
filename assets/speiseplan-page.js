@@ -234,15 +234,3 @@ function mountSpeiseplanSection(section, site) {
         });
     });
 }
-
-function initSpeiseplanModules(root, site) {
-    const scope = root || document;
-    scope.querySelectorAll("[data-mod-speiseplan]").forEach((section) => {
-        mountSpeiseplanSection(section, site);
-    });
-}
-
-if (document.querySelector("[data-mod-speiseplan]")) {
-    const site = typeof loadSite === "function" ? loadSite() : window.KG_SITE;
-    initSpeiseplanModules(document, site);
-}

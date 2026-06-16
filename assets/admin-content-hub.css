@@ -1,0 +1,168 @@
+.content-hub-panel {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    margin: 14px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-hub-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.content-hub-toolbar h2 { font-size: 1.05rem; color: var(--wood-700); margin: 0; }
+
+.content-hub-subtabs {
+    display: flex;
+    gap: 4px;
+    background: #f5f0eb;
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.content-hub-subtabs button {
+    border: none;
+    background: transparent;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.content-hub-subtabs button.active { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+.content-hub-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+}
+
+.content-hub-list {
+    overflow-y: auto;
+    padding: 14px;
+    border-right: 1px solid #eee;
+}
+
+.content-hub-editor {
+    overflow-y: auto;
+    padding: 16px;
+    background: #faf8f6;
+}
+
+.content-hub-cards { display: grid; gap: 10px; }
+
+.content-hub-card {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+
+.content-hub-card:hover { border-color: #c5d9b8; }
+.content-hub-card.active { border-color: var(--accent, #84a26c); background: rgba(231,248,236,0.35); }
+
+.content-hub-card img {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: var(--mint);
+}
+
+.content-hub-card-thumb {
+    width: 72px;
+    height: 54px;
+    border-radius: 10px;
+    background: var(--mint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.content-hub-card h4 { font-size: 0.9rem; margin: 0 0 4px; color: var(--wood-700); }
+.content-hub-card small { font-size: 0.75rem; color: #888; display: block; }
+
+.content-hub-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.content-hub-badge.live { background: var(--mint); color: #2d5a3d; }
+.content-hub-badge.scheduled { background: #fff3cd; color: #856404; }
+.content-hub-badge.home { background: var(--apricot); color: var(--wood-700); }
+
+.content-hub-empty {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    border: 2px dashed #ddd;
+    border-radius: 14px;
+}
+
+.content-hub-editor h3 { font-size: 0.95rem; margin-bottom: 12px; color: var(--wood-700); }
+.content-hub-editor .props-field { margin-bottom: 10px; }
+.content-hub-editor .props-field label { font-size: 0.8rem; }
+.content-hub-editor input, .content-hub-editor textarea, .content-hub-editor select {
+    width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
+}
+.content-hub-editor textarea { min-height: 80px; }
+
+.content-hub-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.content-hub-actions .btn { flex: 1; min-width: 100px; text-align: center; }
+
+/* Admin-Kalender */
+.hub-cal-wrap { margin-bottom: 16px; }
+.hub-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+.hub-cal-nav button {
+    border: none;
+    background: var(--mint);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--wood-700);
+}
+.hub-cal-nav strong { font-size: 0.95rem; color: var(--wood-700); }
+.hub-cal-grid .cal-grid { gap: 4px; }
+.hub-cal-grid .cal-cell { min-height: 36px; font-size: 0.8rem; padding: 4px; }
+.hub-cal-grid .cal-weekdays span { font-size: 0.7rem; }
+.hub-cal-grid .cal-cell.has-event { cursor: pointer; }
+.hub-cal-grid .cal-cell.selected-day { outline: 2px solid var(--accent, #84a26c); }
+
+@media (max-width: 900px) {
+    .content-hub-body { grid-template-columns: 1fr; }
+    .content-hub-list { border-right: none; border-bottom: 1px solid #eee; max-height: 45vh; }
+}

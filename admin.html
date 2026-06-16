@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seiten-Builder | Kindergarten Webereistraße</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/admin-builder.css">
+    <link rel="stylesheet" href="assets/admin-content-hub.css">
+    <link rel="stylesheet" href="assets/admin-media-gallery.css">
+    <link rel="stylesheet" href="assets/theme-decorations.css">
+</head>
+<body class="builder-body">
+    <header class="builder-header">
+        <h1>🧩 Seiten-Builder</h1>
+        <div class="builder-actions">
+            <button type="button" class="btn soft" id="previewBtn">Live-Vorschau</button>
+            <button type="button" class="btn soft" id="previewExternalBtn">Neuer Tab</button>
+            <a class="btn soft" href="index.html">Website</a>
+            <button type="button" class="btn primary" id="saveBtn">Speichern</button>
+            <button type="button" class="btn soft" id="exportBtn">site-data.js exportieren</button>
+            <button type="button" class="btn soft" id="resetBtn">Zurücksetzen</button>
+        </div>
+    </header>
+
+    <div class="admin-status" id="statusMsg"></div>
+
+    <div class="tabs">
+        <button type="button" class="active" data-tab="builder">Seiten & Module</button>
+        <button type="button" data-tab="content">News & Termine</button>
+        <button type="button" data-tab="media">Medien</button>
+        <button type="button" data-tab="design">Design</button>
+        <button type="button" data-tab="global">Globale Daten</button>
+    </div>
+
+    <div id="contentHubPanel" class="builder-panel content-hub-panel" style="display:none"></div>
+
+    <div id="mediaGalleryPanel" class="builder-panel media-gallery-panel" style="display:none"></div>
+
+    <div id="designPanel" class="builder-panel design-panel" style="display:none"></div>
+
+    <div id="globalPanel" class="builder-panel" style="display:none;margin:14px"></div>
+
+    <div class="builder-grid" id="builderMain">
+        <aside class="builder-panel">
+            <h2>Seiten</h2>
+            <div class="builder-panel-body">
+                <div id="pagesList"></div>
+                <button type="button" class="btn-add" id="addPageBtn" style="width:100%;margin-top:8px">+ Neue Seite</button>
+                <button type="button" class="btn-danger" id="deletePageBtn" style="width:100%;margin-top:8px">Seite löschen</button>
+            </div>
+        </aside>
+
+        <section class="builder-panel builder-center">
+            <div class="canvas-toolbar">
+                <h2 id="canvasTitle">Seite</h2>
+                <div class="view-toggle">
+                    <button type="button" class="active" data-view="structure">Struktur</button>
+                    <button type="button" data-view="preview">Live-Vorschau</button>
+                </div>
+            </div>
+            <div id="modulePalette" class="palette"></div>
+            <div class="builder-panel-body" id="moduleCanvas"></div>
+            <div class="builder-panel-body preview-pane" id="livePreview" style="display:none">
+                <div class="preview-pane-inner" id="livePreviewInner"></div>
+            </div>
+        </section>
+
+        <aside class="builder-panel">
+            <h2>Eigenschaften</h2>
+            <div class="builder-panel-body" id="propertiesPanel"></div>
+        </aside>
+    </div>
+
+    <div id="moduleInfoModal" class="module-info-modal" hidden aria-hidden="true">
+        <div class="module-info-backdrop" data-close-modal></div>
+        <div class="module-info-dialog" role="dialog" aria-labelledby="moduleInfoTitle">
+            <button type="button" class="module-info-close" data-close-modal aria-label="Schließen">✕</button>
+            <header class="module-info-header">
+                <span id="moduleInfoIcon"></span>
+                <h3 id="moduleInfoTitle"></h3>
+            </header>
+            <p id="moduleInfoDesc" class="module-info-desc"></p>
+            <p id="moduleInfoUsage" class="module-info-usage"></p>
+            <ul id="moduleInfoTags" class="module-info-tags"></ul>
+            <div class="module-info-preview-wrap">
+                <p class="module-info-preview-label">So sieht es aus:</p>
+                <div id="moduleInfoPreview" class="module-info-preview"></div>
+            </div>
+            <p class="module-info-hint">💡 Zum Einfügen: Modul in die Seite <strong>ziehen</strong>.</p>
+        </div>
+    </div>
+
+    <div id="mediaPickerModal" class="media-picker-modal" hidden aria-hidden="true">
+        <div class="media-picker-backdrop" data-close-picker></div>
+        <div class="media-picker-dialog" role="dialog" aria-labelledby="mediaPickerTitle">
+            <header class="media-picker-head">
+                <h3 id="mediaPickerTitle">Medium aus Galerie wählen</h3>
+                <button type="button" class="media-picker-close" data-close-picker aria-label="Schließen">✕</button>
+            </header>
+            <div class="media-picker-body" id="mediaPickerBody"></div>
+        </div>
+    </div>
+
+    <script src="assets/site-data.js"></script>
+    <script src="assets/site-store.js"></script>
+    <script src="assets/theme-presets.js"></script>
+    <script src="assets/theme-options.js"></script>
+    <script src="assets/theme-engine.js"></script>
+    <script src="assets/module-registry.js"></script>
+    <script src="assets/content-publish.js"></script>
+    <script src="assets/carousel.js"></script>
+    <script src="assets/kalender-page.js"></script>
+    <script src="assets/media-library.js"></script>
+    <script src="assets/admin-media-gallery.js"></script>
+    <script src="assets/admin-content-hub.js"></script>
+    <script src="assets/admin-builder.js"></script>
+</body>
+</html>

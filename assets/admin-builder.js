@@ -952,6 +952,20 @@ function renderDesignPanel() {
                     `).join("")}
                 </div>
 
+                <div class="design-intensity-wrap">
+                    <label>
+                        <span>Animationsintensität</span>
+                        <strong id="themeIntensityLabel">${escapeHtml(animationIntensityLabel(resolved.animationIntensity))} (${resolved.animationIntensity}%)</strong>
+                    </label>
+                    <input type="range" id="theme-animationIntensity" min="0" max="100" step="5" value="${resolved.animationIntensity}">
+                    <div class="design-intensity-hints">
+                        <span>Dezent</span>
+                        <span>Normal (50)</span>
+                        <span>Kräftig</span>
+                    </div>
+                    <p class="field-hint" style="margin-top:8px;margin-bottom:0">Steuert Bewegungsweite, Dauer und Stärke von Scroll-Animationen und Hintergrund-Deko.</p>
+                </div>
+
                 <details class="design-custom" open>
                     <summary><h3>Feineinstellungen (Farben & Ecken)</h3></summary>
                     <div class="design-custom-grid">
@@ -1032,6 +1046,16 @@ function renderDesignPanel() {
         });
     });
 
+    const intensityInput = document.getElementById("theme-animationIntensity");
+    const intensityLabel = document.getElementById("themeIntensityLabel");
+    intensityInput?.addEventListener("input", () => {
+        theme.animationIntensity = clampAnimationIntensity(intensityInput.value);
+        if (intensityLabel) {
+            intensityLabel.textContent = `${animationIntensityLabel(theme.animationIntensity)} (${theme.animationIntensity}%)`;
+        }
+        applyThemeToPreview(site);
+    });
+
     panel.querySelectorAll("[id^=theme-color-]").forEach((input) => {
         input.addEventListener("input", () => {
             const key = input.id.replace("theme-color-", "");
@@ -1051,6 +1075,7 @@ function renderDesignPanel() {
             if (el) theme.custom[key] = el.value;
         });
         theme.borderRadius = document.getElementById("theme-borderRadius")?.value || "";
+        theme.animationIntensity = clampAnimationIntensity(document.getElementById("theme-animationIntensity")?.value);
         const preset = getPresetById(theme.presetId);
         const defaults = preset.vars;
         Object.keys(theme.custom).forEach((key) => {

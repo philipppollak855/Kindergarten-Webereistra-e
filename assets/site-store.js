@@ -12,7 +12,7 @@ function loadSite() {
     }
     if (!site) site = structuredClone(window.KG_SITE || null);
     if (site?.global && !site.global.theme) {
-        site.global.theme = { presetId: "holz-pastell", custom: {}, fontFamily: "", borderRadius: "", showClouds: null, decoration: "", pageAnimation: "" };
+        site.global.theme = { presetId: "holz-pastell", custom: {}, fontFamily: "", borderRadius: "", showClouds: null, decoration: "", pageAnimation: "", animationIntensity: 50 };
     }
     if (typeof ensureLayoutConfig === "function") ensureLayoutConfig(site);
     return site;

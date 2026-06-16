@@ -78,7 +78,7 @@ body {
 
 .reveal {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(var(--kg-anim-distance, 18px));
 }
 
 .reveal.visible {

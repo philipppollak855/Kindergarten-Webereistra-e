@@ -52,3 +52,37 @@ function getDecorationOption(id) {
 function getAnimationOption(id) {
     return ANIMATION_OPTIONS.find((a) => a.id === id) || ANIMATION_OPTIONS[1];
 }
+
+const ANIMATION_INTENSITY_DEFAULT = 50;
+
+function clampAnimationIntensity(value) {
+    const n = Number(value);
+    if (Number.isNaN(n)) return ANIMATION_INTENSITY_DEFAULT;
+    return Math.min(100, Math.max(0, Math.round(n)));
+}
+
+function resolveAnimationIntensity(theme) {
+    return clampAnimationIntensity(theme?.animationIntensity ?? ANIMATION_INTENSITY_DEFAULT);
+}
+
+function getAnimationIntensityVars(intensity) {
+    const t = clampAnimationIntensity(intensity) / 100;
+    return {
+        "--kg-anim-duration": `${(0.3 + t * 0.75).toFixed(2)}s`,
+        "--kg-anim-distance": `${Math.round(6 + t * 42)}px`,
+        "--kg-anim-slide": `${Math.round(8 + t * 44)}px`,
+        "--kg-anim-scale-start": `${(0.99 - t * 0.1).toFixed(3)}`,
+        "--kg-anim-bounce-peak": `${Math.round(-1 - t * 10)}px`,
+        "--kg-deco-speed": `${(0.55 + t * 1.15).toFixed(2)}`,
+        "--kg-deco-opacity": `${(0.2 + t * 0.8).toFixed(2)}`
+    };
+}
+
+function animationIntensityLabel(intensity) {
+    const v = clampAnimationIntensity(intensity);
+    if (v <= 20) return "Sehr dezent";
+    if (v <= 40) return "Dezent";
+    if (v <= 60) return "Normal";
+    if (v <= 80) return "Kräftig";
+    return "Sehr kräftig";
+}

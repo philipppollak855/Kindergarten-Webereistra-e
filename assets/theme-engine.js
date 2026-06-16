@@ -15,6 +15,19 @@ function resolveThemeAnimation(theme, preset) {
     return theme.pageAnimation || preset.defaultAnimation || "fade-up";
 }
 
+function applyAnimationIntensityToElement(el, intensity) {
+    if (!el) return;
+    Object.entries(getAnimationIntensityVars(intensity)).forEach(([key, value]) => {
+        el.style.setProperty(key, value);
+    });
+}
+
+function applyPageAnimationAttributes(el, resolved) {
+    if (!el) return;
+    el.dataset.pageAnim = resolved.pageAnimation || "fade-up";
+    el.dataset.pageAnimIntensity = String(resolved.animationIntensity ?? ANIMATION_INTENSITY_DEFAULT);
+}
+
 function ensureSiteTheme(site) {
     if (!site?.global) return;
     if (!site.global.theme) {
@@ -25,7 +38,8 @@ function ensureSiteTheme(site) {
             borderRadius: "",
             showClouds: null,
             decoration: "",
-            pageAnimation: ""
+            pageAnimation: "",
+            animationIntensity: ANIMATION_INTENSITY_DEFAULT
         };
     }
     if (!site.global.theme.custom) site.global.theme.custom = {};
@@ -41,6 +55,7 @@ function getResolvedTheme(site) {
     Object.entries(radiusVars).forEach(([k, v]) => { vars[k] = v; });
     const decoration = resolveThemeDecoration(t, preset);
     const pageAnimation = resolveThemeAnimation(t, preset);
+    const animationIntensity = resolveAnimationIntensity(t);
     return {
         presetId: preset.id,
         preset,
@@ -49,6 +64,7 @@ function getResolvedTheme(site) {
         showClouds: decoration === "clouds",
         decoration,
         pageAnimation,
+        animationIntensity,
         borderRadius,
         vars
     };
@@ -111,7 +127,9 @@ function applyThemeDecorations(resolved, target = document) {
         document.querySelectorAll(".cloud").forEach((cloud) => {
             cloud.style.display = "none";
         });
-        document.body.dataset.pageAnim = resolved.pageAnimation || "fade-up";
+        applyPageAnimationAttributes(document.body, resolved);
+        applyAnimationIntensityToElement(document.documentElement, resolved.animationIntensity);
+        applyAnimationIntensityToElement(document.body, resolved.animationIntensity);
     }
 }
 
@@ -133,11 +151,14 @@ function applyThemeToPreview(site) {
     if (inner) {
         applyThemeToElement(inner, resolved);
         inner.style.fontFamily = `var(--font-family)`;
-        inner.dataset.pageAnim = resolved.pageAnimation;
+        applyPageAnimationAttributes(inner, resolved);
+        applyAnimationIntensityToElement(inner, resolved.animationIntensity);
     }
     if (sample) {
         applyThemeToElement(sample, resolved);
         sample.style.fontFamily = `var(--font-family)`;
+        applyPageAnimationAttributes(sample, resolved);
+        applyAnimationIntensityToElement(sample, resolved.animationIntensity);
         let deco = sample.querySelector(".design-sample-deco");
         if (!deco) {
             deco = document.createElement("div");

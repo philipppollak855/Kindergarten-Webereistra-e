@@ -52,6 +52,7 @@ Hinweis: Hochgeladene Bilder werden im Browser gespeichert. Für die Live-Websit
 - **19 Farbkonzepte** (filterbar: Klassisch, Bunt, Modern)
 - **8 Dekorationen:** Wolken, Blasen, Sterne, Blätter, Punkte, Sonnenstrahlen, Wellen, Keine
 - **6 Scroll-Animationen:** Von unten, Einblenden, Hereinschieben, Heranzoomen, Hüpfend, Keine
+- **Animationsintensität** (0–100 %): Regler für Stärke von Scroll-Effekten und Deko
 - Feineinstellung aller Farben und Ecken-Rundung
 
 8 **Referenz-Designs** als Ausgangspunkt:

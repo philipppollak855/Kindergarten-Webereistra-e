@@ -181,6 +181,18 @@ const MODULE_TYPES = {
             { key: "showList", label: "Terminliste", type: "checkbox" }
         ]
     },
+    speiseplan: {
+        label: "Speiseplan",
+        icon: "🍽️",
+        canHaveChildren: false,
+        defaults: { title: "Speiseplan", intro: "", defaultView: "week", allowViewSwitch: true },
+        fields: [
+            { key: "title", label: "Titel", type: "text" },
+            { key: "intro", label: "Einleitung", type: "textarea" },
+            { key: "defaultView", label: "Standard-Ansicht", type: "select", options: ["week", "14days"] },
+            { key: "allowViewSwitch", label: "Woche/14-Tage umschaltbar", type: "checkbox" }
+        ]
+    },
     kontakt: {
         label: "Kontakt",
         icon: "📞",
@@ -628,6 +640,7 @@ const MODULE_META = {
     news: { description: "Liste aller News-Beiträge mit Vorschau.", usage: "News im Tab News & Termine pflegen. Geplante Veröffentlichung möglich." },
     aktuell: { description: "News und Termine auf der Startseite mit Erscheinungszeit.", usage: "Im Tab News & Termine planen. Erscheint automatisch zum Zeitpunkt." },
     kalender: { description: "Monatskalender und/oder Terminliste.", usage: "Termine im Tab News & Termine pflegen. Monate mit Pfeilen wechseln." },
+    speiseplan: { description: "Speiseplan als Wochen- oder 14-Tage-Tabelle.", usage: "Pläne im Tab News & Termine → Speiseplan pflegen. Vorplanung mit Veröffentlichungsdatum möglich." },
     kontakt: { description: "Kontaktkarten mit Adresse, Telefon und E-Mail.", usage: "Daten aus globalen Kontakt-Einstellungen." },
     karte: { description: "Google-Maps-Karte mit Adresse.", usage: "Embed-URL und Adresse im Modul einstellbar." },
     oeffnungszeiten: { description: "Tabelle mit Öffnungszeiten.", usage: "Zeilen als Unterelemente, Fußnote optional." },
@@ -702,6 +715,27 @@ function renderModule(module, site, depth = 0) {
     return wrapWithLayout(inner, module);
 }
 
+function renderTextBody(body) {
+    return String(body ?? "")
+        .split("\n\n")
+        .filter((block) => block.trim())
+        .map((block) => {
+            const trimmed = block.trim();
+            if (trimmed.startsWith("## ")) {
+                return `<h3 class="text-section-title">${escapeHtml(trimmed.slice(3))}</h3>`;
+            }
+            if (trimmed.startsWith("### ")) {
+                return `<h4 class="text-section-subtitle">${escapeHtml(trimmed.slice(4))}</h4>`;
+            }
+            if (trimmed.startsWith("- ")) {
+                const items = trimmed.split("\n").map((line) => line.replace(/^- /, "").trim()).filter(Boolean);
+                return `<ul class="text-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+            }
+            return `<p>${escapeHtml(trimmed).replace(/\n/g, "<br>")}</p>`;
+        })
+        .join("");
+}
+
 function renderModuleInner(module, site, depth = 0) {
     const p = module.props || {};
     const type = module.type;
@@ -733,7 +767,7 @@ function renderModuleInner(module, site, depth = 0) {
             return `<section class="container section visible">
                 ${p.title ? `<h2>${escapeHtml(p.title)}</h2>` : ""}
                 ${p.lead ? `<p class="lead">${escapeHtml(p.lead)}</p>` : ""}
-                <div>${escapeHtml(p.body).replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>")}</div>
+                <div class="text-body">${renderTextBody(p.body)}</div>
             </section>`;
         case "cards":
             return `<section class="container section visible">
@@ -827,6 +861,11 @@ function renderModuleInner(module, site, depth = 0) {
                 <div class="section-header"><h2>${escapeHtml(p.title)}</h2>${p.intro ? `<p class="lead">${escapeHtml(p.intro)}</p>` : ""}</div>
                 ${p.showGrid !== false ? '<div data-render="kalender-grid"></div>' : ""}
                 ${p.showList !== false ? '<div class="kalender-events" data-render="kalender-list"></div>' : ""}
+            </section>`;
+        case "speiseplan":
+            return `<section class="container section visible" data-mod-speiseplan data-default-view="${escapeHtml(p.defaultView || "week")}" data-allow-switch="${p.allowViewSwitch !== false}">
+                <div class="section-header"><h2>${escapeHtml(p.title)}</h2>${p.intro ? `<p class="lead">${escapeHtml(p.intro)}</p>` : ""}</div>
+                <div data-render="speiseplan-root"></div>
             </section>`;
         case "kontakt": {
             const k = site.global?.kontakt || {};
@@ -1077,6 +1116,7 @@ function migrateSiteToLegacyContent(site) {
         gruppen: site.global.gruppen,
         news: site.global.news,
         kalender: site.global.kalender,
+        speiseplan: site.global.speiseplan,
         images: site.global.images || {}
     };
 }

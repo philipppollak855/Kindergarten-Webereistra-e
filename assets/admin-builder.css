@@ -395,7 +395,30 @@ body.modal-open { overflow: hidden; }
 .props-layout h4, .props-items h4 { font-size: 0.85rem; margin-bottom: 8px; color: var(--wood-700); }
 .props-items h4 small { font-weight: 400; color: #999; }
 
+.text-body h3.text-section-title {
+    font-size: 1.05rem;
+    color: var(--wood-700);
+    margin: 18px 0 8px;
+}
+
+.text-body h4.text-section-subtitle {
+    font-size: 0.95rem;
+    color: var(--wood-700);
+    margin: 14px 0 6px;
+}
+
+.text-body ul.text-list {
+    margin: 8px 0 14px 1.2rem;
+    padding: 0;
+}
+
+.text-body ul.text-list li {
+    margin-bottom: 6px;
+}
+
 .page-item { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-radius: 10px; cursor: pointer; margin-bottom: 6px; border: 1px solid transparent; }
+.page-legal-badge { margin-right: 4px; }
+.page-item-legal { border-left: 3px solid #c5d9b8; }
 .page-item:hover, .page-item.active { background: var(--apricot); border-color: rgba(122,90,75,0.15); }
 .page-item small { color: #888; font-size: 0.75rem; }
 

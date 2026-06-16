@@ -162,6 +162,50 @@
 .hub-cal-grid .cal-cell.has-event { cursor: pointer; }
 .hub-cal-grid .cal-cell.selected-day { outline: 2px solid var(--accent, #84a26c); }
 
+.hub-speiseplan-table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border: 1px solid #eee;
+    border-radius: 12px;
+}
+
+.hub-speiseplan-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+    font-size: 0.88rem;
+}
+
+.hub-speiseplan-table th,
+.hub-speiseplan-table td {
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.hub-speiseplan-table thead th {
+    background: var(--wood-100);
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.hub-sp-day-label {
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--wood-700);
+    background: #fafafa;
+    min-width: 120px;
+}
+
+.hub-speiseplan-table input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.85rem;
+}
+
 @media (max-width: 900px) {
     .content-hub-body { grid-template-columns: 1fr; }
     .content-hub-list { border-right: none; border-bottom: 1px solid #eee; max-height: 45vh; }

@@ -1,6 +1,7 @@
 let hubSubTab = "news";
 let hubSelectedNews = 0;
 let hubSelectedEvent = 0;
+let hubSelectedPlan = 0;
 let hubCalYear = new Date().getFullYear();
 let hubCalMonth = new Date().getMonth();
 let hubCalSelectedDate = "";
@@ -34,13 +35,15 @@ function renderContentHubPanel() {
     const site = window.KG_ADMIN?.getSite() || loadSite();
     const news = site.global.news?.items || [];
     const events = site.global.kalender?.events || [];
+    const plans = site.global.speiseplan?.plans || [];
 
     panel.innerHTML = `
         <div class="content-hub-toolbar">
-            <h2>📰 News & Termine – Schnellpflege</h2>
+            <h2>📰 News, Termine & Speiseplan</h2>
             <div class="content-hub-subtabs">
                 <button type="button" class="${hubSubTab === "news" ? "active" : ""}" data-hub-tab="news">News (${news.length})</button>
                 <button type="button" class="${hubSubTab === "events" ? "active" : ""}" data-hub-tab="events">Termine (${events.length})</button>
+                <button type="button" class="${hubSubTab === "speiseplan" ? "active" : ""}" data-hub-tab="speiseplan">Speiseplan (${plans.length})</button>
             </div>
             <button type="button" class="btn primary" id="hubSaveAllBtn">Alles speichern</button>
         </div>
@@ -56,10 +59,12 @@ function renderContentHubPanel() {
 
     const body = document.getElementById("contentHubBody");
     if (hubSubTab === "news") body.innerHTML = renderNewsHub(site);
+    else if (hubSubTab === "speiseplan") body.innerHTML = renderSpeiseplanHub(site);
     else body.innerHTML = renderEventsHub(site);
 
     bindNewsHub(site);
     bindEventsHub(site);
+    bindSpeiseplanHub(site);
     bindMediaFieldInputs(body);
 }
 
@@ -333,8 +338,208 @@ function hubSaveAll() {
     const site = window.KG_ADMIN?.getSite();
     if (!site) return;
     if (hubSubTab === "news") hubCollectNews(site);
+    else if (hubSubTab === "speiseplan") hubCollectPlan(site);
     else hubCollectEvent(site);
     window.KG_ADMIN?.save();
-    showStatus("News & Termine gespeichert.");
+    showStatus("Inhalte gespeichert.");
     window.KG_ADMIN?.refresh?.();
+}
+
+function ensureSpeiseplanGlobal(site) {
+    if (!site.global.speiseplan) site.global.speiseplan = { plans: [] };
+    if (!Array.isArray(site.global.speiseplan.plans)) site.global.speiseplan.plans = [];
+}
+
+function hubPlanRangeLabel(plan) {
+    if (!plan?.startDate) return "Kein Zeitraum";
+    const end = typeof spPlanEndDate === "function" ? spPlanEndDate(plan) : plan.startDate;
+    return `${plan.startDate} – ${end}`;
+}
+
+function renderSpeiseplanHub(site) {
+    ensureSpeiseplanGlobal(site);
+    const plans = site.global.speiseplan.plans;
+    if (!plans.length) hubSelectedPlan = 0;
+    else if (hubSelectedPlan >= plans.length) hubSelectedPlan = plans.length - 1;
+
+    const sorted = [...plans].sort((a, b) => {
+        const da = a.startDate || "";
+        const db = b.startDate || "";
+        return db.localeCompare(da);
+    });
+
+    const cards = sorted.length ? sorted.map((plan) => {
+        const idx = plans.indexOf(plan);
+        const days = plan.durationDays === 14 ? "14 Tage" : "7 Tage";
+        return `
+        <button type="button" class="content-hub-card ${idx === hubSelectedPlan ? "active" : ""}" data-hub-plan="${idx}">
+            <div class="content-hub-card-thumb">🍽️</div>
+            <div>
+                <h4>${escapeHtml(plan.title || "Ohne Titel")}</h4>
+                <small>${escapeHtml(hubPlanRangeLabel(plan))} · ${days}</small>
+            </div>
+            ${hubBadge(plan)}
+        </button>`;
+    }).join("") : `<div class="content-hub-empty">Noch kein Speiseplan. Ersten Plan anlegen.</div>`;
+
+    return `
+        <div class="content-hub-list">
+            <button type="button" class="btn-add" id="hubAddPlan" style="margin-bottom:12px">+ Neuer Speiseplan</button>
+            <div class="content-hub-cards">${cards}</div>
+        </div>
+        <div class="content-hub-editor" id="hubPlanEditor">${plans.length ? renderPlanEditor(plans[hubSelectedPlan], hubSelectedPlan) : "<p class='field-hint'>Speiseplan auswählen oder neu anlegen.</p>"}</div>`;
+}
+
+function renderPlanEditor(plan, i) {
+    if (typeof syncPlanDays === "function") syncPlanDays(plan);
+    const duration = plan.durationDays === 14 ? 14 : 7;
+    const dayRows = (plan.days || []).map((day, di) => {
+        const head = day.date ? new Date(day.date + "T12:00:00").toLocaleDateString("de-AT", { weekday: "long", day: "2-digit", month: "2-digit" }) : `Tag ${di + 1}`;
+        return `
+            <tr>
+                <th class="hub-sp-day-label">${escapeHtml(head)}</th>
+                <td><input type="text" id="hp-breakfast-${i}-${di}" value="${escapeAttr(day.breakfast || "")}" placeholder="Frühstück"></td>
+                <td><input type="text" id="hp-snack-${i}-${di}" value="${escapeAttr(day.snack || "")}" placeholder="Jause"></td>
+                <td><input type="text" id="hp-lunch-${i}-${di}" value="${escapeAttr(day.lunch || "")}" placeholder="Mittagessen"></td>
+                <td><input type="text" id="hp-note-${i}-${di}" value="${escapeAttr(day.note || "")}" placeholder="Hinweis"></td>
+            </tr>`;
+    }).join("");
+
+    return `
+        <h3>Speiseplan bearbeiten</h3>
+        ${hubField("Titel", `hp-title-${i}`, plan.title)}
+        ${hubField("ID", `hp-id-${i}`, plan.id)}
+        ${hubField("Startdatum (1. Tag)", `hp-start-${i}`, plan.startDate, "date")}
+        <div class="props-field">
+            <label for="hp-duration-${i}">Zeitraum</label>
+            <select id="hp-duration-${i}">
+                <option value="7" ${duration === 7 ? "selected" : ""}>1 Woche (7 Tage)</option>
+                <option value="14" ${duration === 14 ? "selected" : ""}>14 Tage</option>
+            </select>
+        </div>
+        ${hubField("Veröffentlichung (Datum & Uhrzeit)", `hp-publishAt-${i}`, plan.publishAt, "datetime-local")}
+        <p class="field-hint">Leer lassen = sofort sichtbar. Mit Datum/Uhrzeit erscheint der Plan automatisch ab dann auf der Website.</p>
+        <div class="hub-speiseplan-table-wrap">
+            <table class="hub-speiseplan-table">
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Frühstück</th>
+                        <th>Jause</th>
+                        <th>Mittagessen</th>
+                        <th>Hinweis</th>
+                    </tr>
+                </thead>
+                <tbody>${dayRows}</tbody>
+            </table>
+        </div>
+        <div class="content-hub-actions">
+            <button type="button" class="btn primary" id="hubSavePlan">Speichern</button>
+            <button type="button" class="btn soft" id="hubPreviewPlan">Vorschau</button>
+            <button type="button" class="btn-danger" id="hubDeletePlan">Löschen</button>
+        </div>`;
+}
+
+function bindSpeiseplanHub(site) {
+    ensureSpeiseplanGlobal(site);
+
+    document.getElementById("hubAddPlan")?.addEventListener("click", () => {
+        const today = new Date();
+        const day = today.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + diff);
+        const pad = (n) => String(n).padStart(2, "0");
+        const startDate = `${monday.getFullYear()}-${pad(monday.getMonth() + 1)}-${pad(monday.getDate())}`;
+
+        const plan = {
+            id: uid("speiseplan"),
+            title: "",
+            startDate,
+            durationDays: 7,
+            publishAt: "",
+            days: []
+        };
+        if (typeof syncPlanDays === "function") syncPlanDays(plan);
+
+        site.global.speiseplan.plans.unshift(plan);
+        hubSelectedPlan = 0;
+        window.KG_ADMIN?.setSite(site);
+        renderContentHubPanel();
+    });
+
+    document.querySelectorAll("[data-hub-plan]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            hubCollectPlan(site);
+            hubSelectedPlan = Number(btn.dataset.hubPlan);
+            renderContentHubPanel();
+        });
+    });
+
+    document.getElementById("hp-start-" + hubSelectedPlan)?.addEventListener("change", () => {
+        hubCollectPlan(site, false);
+        const plan = site.global.speiseplan.plans[hubSelectedPlan];
+        if (plan && typeof syncPlanDays === "function") syncPlanDays(plan);
+        window.KG_ADMIN?.setSite(site);
+        renderContentHubPanel();
+    });
+
+    document.getElementById("hp-duration-" + hubSelectedPlan)?.addEventListener("change", () => {
+        hubCollectPlan(site, false);
+        const plan = site.global.speiseplan.plans[hubSelectedPlan];
+        if (plan) {
+            plan.durationDays = Number(document.getElementById(`hp-duration-${hubSelectedPlan}`)?.value) === 14 ? 14 : 7;
+            if (typeof syncPlanDays === "function") syncPlanDays(plan);
+        }
+        window.KG_ADMIN?.setSite(site);
+        renderContentHubPanel();
+    });
+
+    document.getElementById("hubSavePlan")?.addEventListener("click", () => {
+        hubCollectPlan(site);
+        window.KG_ADMIN?.save();
+        showStatus("Speiseplan gespeichert.");
+        renderContentHubPanel();
+    });
+
+    document.getElementById("hubDeletePlan")?.addEventListener("click", () => {
+        if (!confirm("Speiseplan wirklich löschen?")) return;
+        site.global.speiseplan.plans.splice(hubSelectedPlan, 1);
+        hubSelectedPlan = Math.max(0, hubSelectedPlan - 1);
+        window.KG_ADMIN?.setSite(site);
+        window.KG_ADMIN?.save();
+        renderContentHubPanel();
+    });
+
+    document.getElementById("hubPreviewPlan")?.addEventListener("click", () => {
+        hubCollectPlan(site);
+        window.open("speiseplan.html", "_blank");
+    });
+}
+
+function hubCollectPlan(site, syncDays = true) {
+    const i = hubSelectedPlan;
+    const plan = site.global.speiseplan?.plans[i];
+    if (!plan) return;
+
+    (plan.days || []).forEach((day, di) => {
+        const bf = document.getElementById(`hp-breakfast-${i}-${di}`);
+        if (bf) day.breakfast = bf.value || "";
+        const sn = document.getElementById(`hp-snack-${i}-${di}`);
+        if (sn) day.snack = sn.value || "";
+        const lu = document.getElementById(`hp-lunch-${i}-${di}`);
+        if (lu) day.lunch = lu.value || "";
+        const no = document.getElementById(`hp-note-${i}-${di}`);
+        if (no) day.note = no.value || "";
+    });
+
+    plan.title = document.getElementById(`hp-title-${i}`)?.value || "";
+    plan.id = document.getElementById(`hp-id-${i}`)?.value || plan.id;
+    plan.startDate = document.getElementById(`hp-start-${i}`)?.value || plan.startDate;
+    plan.durationDays = Number(document.getElementById(`hp-duration-${i}`)?.value) === 14 ? 14 : 7;
+
+    const pub = document.getElementById(`hp-publishAt-${i}`)?.value;
+    plan.publishAt = pub ? new Date(pub).toISOString() : "";
+
+    if (syncDays && typeof syncPlanDays === "function") syncPlanDays(plan);
 }

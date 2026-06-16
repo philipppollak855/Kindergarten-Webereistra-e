@@ -15,6 +15,11 @@ function loadSite() {
         site.global.theme = { presetId: "holz-pastell", custom: {}, fontFamily: "", borderRadius: "", showClouds: null, decoration: "", pageAnimation: "", animationIntensity: 50 };
     }
     if (typeof ensureLayoutConfig === "function") ensureLayoutConfig(site);
+    if (typeof ensureLegalPages === "function") ensureLegalPages(site);
+    if (site?.global) {
+        if (!site.global.speiseplan) site.global.speiseplan = { plans: [] };
+        if (!Array.isArray(site.global.speiseplan.plans)) site.global.speiseplan.plans = [];
+    }
     return site;
 }
 

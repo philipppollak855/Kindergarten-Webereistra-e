@@ -16,7 +16,8 @@ window.KG_SITE = {
         },
         footer: {
             copyright: "© 2026 NÖ Landeskindergarten Ternitz - Webereistraße",
-            tagline: "",
+            tagline: "Landeskindergarten des Landes Niederösterreich",
+            legalNote: "Impressum und Datenschutz gemäß österreichischem Recht (ECG, MedienG, DSGVO, DSG).",
             links: [
                 { id: "impressum", label: "Impressum", href: "impressum.html", enabled: true },
                 { id: "datenschutz", label: "Datenschutz", href: "datenschutz.html", enabled: true },
@@ -60,6 +61,49 @@ window.KG_SITE = {
             events: [
                 { id: "sommerfest-2026", date: "2026-06-28", time: "14:00", title: "Sommerfest", description: "Fest im Garten.", category: "Fest", image: "images/gebaeude-garten.png", body: "Gemeinsames Sommerfest.", images: [{ src: "images/gebaeude-garten.png", alt: "Garten" }], publishAt: "", showOnHomepage: true },
                 { id: "elternabend-juni", date: "2026-06-20", time: "18:30", title: "Elternabend", description: "Informationsabend.", category: "Eltern", image: "", body: "", images: [], publishAt: "2026-06-15T08:00:00.000Z", showOnHomepage: true }
+            ]
+        },
+        speiseplan: {
+            plans: [
+                {
+                    id: "speiseplan-kw25",
+                    title: "Speiseplan KW 25",
+                    startDate: "2026-06-15",
+                    durationDays: 7,
+                    publishAt: "",
+                    days: [
+                        { date: "2026-06-15", breakfast: "Vollkornbrot, Butter, Marmelade", snack: "Apfel", lunch: "Gemüsesuppe mit Nudeln", note: "" },
+                        { date: "2026-06-16", breakfast: "Müsli mit Joghurt", snack: "Banane", lunch: "Reis mit Tomatensoße", note: "" },
+                        { date: "2026-06-17", breakfast: "Brötchen, Käse", snack: "Karottensticks", lunch: "Kartoffel-Gemüse-Pfanne", note: "" },
+                        { date: "2026-06-18", breakfast: "Brot, Honig", snack: "Trauben", lunch: "Linsensuppe mit Brot", note: "" },
+                        { date: "2026-06-19", breakfast: "Porridge", snack: "Birne", lunch: "Nudeln mit Brokkoli", note: "" },
+                        { date: "2026-06-20", breakfast: "Butterbrot, Aufstrich", snack: "Obstmix", lunch: "Erdäpfelsuppe", note: "Freitag" },
+                        { date: "2026-06-21", breakfast: "—", snack: "—", lunch: "—", note: "Wochenende – kein Kindergarten" }
+                    ]
+                },
+                {
+                    id: "speiseplan-juli-1",
+                    title: "Speiseplan Juli (1. Hälfte)",
+                    startDate: "2026-06-29",
+                    durationDays: 14,
+                    publishAt: "2026-06-22T08:00:00.000Z",
+                    days: [
+                        { date: "2026-06-29", breakfast: "Brot, Butter", snack: "Apfel", lunch: "Nudelsuppe", note: "" },
+                        { date: "2026-06-30", breakfast: "Müsli", snack: "Banane", lunch: "Reis mit Gemüse", note: "" },
+                        { date: "2026-07-01", breakfast: "Brötchen", snack: "Karotten", lunch: "Kartoffeln mit Soße", note: "" },
+                        { date: "2026-07-02", breakfast: "Porridge", snack: "Birne", lunch: "Linseneintopf", note: "" },
+                        { date: "2026-07-03", breakfast: "Brot, Käse", snack: "Obst", lunch: "Gemüsepfanne", note: "" },
+                        { date: "2026-07-04", breakfast: "—", snack: "—", lunch: "—", note: "Wochenende" },
+                        { date: "2026-07-05", breakfast: "—", snack: "—", lunch: "—", note: "Wochenende" },
+                        { date: "2026-07-06", breakfast: "Müsli", snack: "Apfel", lunch: "Tomatensuppe", note: "" },
+                        { date: "2026-07-07", breakfast: "Brot", snack: "Banane", lunch: "Nudeln mit Sauce", note: "" },
+                        { date: "2026-07-08", breakfast: "Brötchen", snack: "Trauben", lunch: "Reis mit Erbsen", note: "" },
+                        { date: "2026-07-09", breakfast: "Porridge", snack: "Karotten", lunch: "Kartoffelsuppe", note: "" },
+                        { date: "2026-07-10", breakfast: "Butterbrot", snack: "Obst", lunch: "Gemüse-Reis-Pfanne", note: "" },
+                        { date: "2026-07-11", breakfast: "—", snack: "—", lunch: "—", note: "Wochenende" },
+                        { date: "2026-07-12", breakfast: "—", snack: "—", lunch: "—", note: "Wochenende" }
+                    ]
+                }
             ]
         },
         theme: {
@@ -136,6 +180,9 @@ window.KG_SITE = {
         ] },
         { id: "kalender", title: "Kalender", navLabel: "Kalender", inNav: true, path: "kalender.html", modules: [
             { id: "kal-mod", type: "kalender", props: { title: "Termine", intro: "", showGrid: true, showList: true } }
+        ] },
+        { id: "speiseplan", title: "Speiseplan", navLabel: "Speiseplan", inNav: true, path: "speiseplan.html", modules: [
+            { id: "sp-mod", type: "speiseplan", props: { title: "Unser Speiseplan", intro: "Aktuelle Mahlzeiten im Überblick – wahlweise als Woche oder 14 Tage.", defaultView: "week", allowViewSwitch: true } }
         ] },
         { id: "kontakt", title: "Kontakt", navLabel: "Kontakt", inNav: true, path: "kontakt.html", modules: [
             { id: "kontakt-mod", type: "kontakt", props: { title: "Kontakt", intro: "" } }

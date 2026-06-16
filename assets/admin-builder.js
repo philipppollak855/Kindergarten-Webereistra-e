@@ -112,6 +112,7 @@ function renderPreview() {
     root.innerHTML = renderPage(site, currentPageId);
     initPageCarousels(root);
     initKalenderModules(root, site);
+    if (typeof initSpeiseplanModules === "function") initSpeiseplanModules(root, site);
     initPageTabs(root);
     bindPreviewNavigationGuard(root);
     bindPreviewModuleSelection(root);
@@ -418,10 +419,14 @@ function setCanvasView(view) {
 
 function renderPages() {
     const root = document.getElementById("pagesList");
-    root.innerHTML = site.pages.map((page) => `
-        <div class="page-item ${page.id === currentPageId ? "active" : ""}" data-page-id="${page.id}">
-            <div><strong>${escapeHtml(page.navLabel || page.title)}</strong><br><small>${escapeHtml(page.path || "")}</small></div>
-        </div>`).join("");
+    root.innerHTML = site.pages.map((page) => {
+        const isLegal = page.id === "impressum" || page.id === "datenschutz";
+        const badge = isLegal ? `<span class="page-legal-badge" title="Rechtstext – im Builder pflegbar">⚖️</span>` : "";
+        return `
+        <div class="page-item ${page.id === currentPageId ? "active" : ""} ${isLegal ? "page-item-legal" : ""}" data-page-id="${page.id}">
+            <div><strong>${badge}${escapeHtml(page.navLabel || page.title)}</strong><br><small>${escapeHtml(page.path || "")}</small></div>
+        </div>`;
+    }).join("");
 
     root.querySelectorAll(".page-item").forEach((el) => {
         el.addEventListener("click", () => {
@@ -437,7 +442,7 @@ function renderPalette() {
     const groups = [
         { label: "Basis", types: ["hero", "heroKompakt", "text", "banner", "trennlinie", "spacer"] },
         { label: "Inhalt", types: ["cards", "icons", "split", "gallery", "slideshow", "image", "video", "zitat", "testimonials", "zahlen", "timeline", "checkliste", "hinweis", "tabs", "preisliste"] },
-        { label: "Daten", types: ["team", "gruppen", "news", "aktuell", "kalender", "kontakt", "karte", "oeffnungszeiten", "downloads", "partner"] },
+        { label: "Daten", types: ["team", "gruppen", "news", "aktuell", "kalender", "speiseplan", "kontakt", "karte", "oeffnungszeiten", "downloads", "partner"] },
         { label: "Aktion", types: ["cta", "buttons", "ablauf", "accordion"] },
         { label: "Layout", types: ["section", "columns"] }
     ];
@@ -1131,11 +1136,12 @@ function renderGlobalPanel() {
             <details class="global-section" open>
                 <summary><h3>Footer</h3></summary>
                 ${field("Copyright-Zeile", "gf-copyright", f.copyright || "")}
-                ${field("Zusatzzeile (optional)", "gf-tagline", f.tagline || "")}
+                ${field("Zusatzzeile (Träger / Einrichtung)", "gf-tagline", f.tagline || "")}
+                ${field("Rechtlicher Hinweis (Footer)", "gf-legalNote", f.legalNote || "", "textarea")}
                 <div class="props-field"><label><input type="checkbox" id="gf-showAdmin" ${f.showAdminLink !== false ? "checked" : ""}> Admin-Link anzeigen</label></div>
                 ${field("Admin-Link Text", "gf-adminLabel", f.adminLinkLabel || "Inhalte pflegen")}
                 <h4 style="margin:14px 0 8px;font-size:0.9rem">Footer-Links</h4>
-                <p class="field-hint">Impressum, Datenschutz usw. – Inhalte der Seiten im Seiten-Builder bearbeiten.</p>
+                <p class="field-hint">Standard: Impressum, Datenschutz, Kontakt. Die <strong>Texte</strong> der Rechtsseiten bearbeiten Sie im Tab <strong>Seiten & Module</strong> (Seiten „Impressum“ und „Datenschutz“ – jeweils mehrere Textmodule).</p>
                 <div id="globalFooterLinks">${renderGlobalFooterLinks(f.links || [])}</div>
                 <button type="button" class="btn-add" id="addFooterLinkBtn">+ Footer-Link</button>
             </details>
@@ -1151,7 +1157,7 @@ function renderGlobalPanel() {
                 <div id="globalGruppenList">${renderGlobalGruppenList()}</div>
                 <button type="button" class="btn-add" id="addGruppeBtn">+ Gruppe</button>
             </details>
-            <p class="field-hint">News und Termine pflegen Sie bequem im Tab <strong>News & Termine</strong>. Impressum & Datenschutz als Seiten im Tab <strong>Seiten & Module</strong>.</p>
+            <p class="field-hint">News und Termine: Tab <strong>News & Termine</strong>. Rechtstexte (Impressum, Datenschutz): Tab <strong>Seiten & Module</strong> → Seite wählen → Module bearbeiten.</p>
         </div>
         <button type="button" class="btn primary" id="saveGlobalBtn" style="margin-top:16px">Alle globalen Daten speichern</button>`;
 
@@ -1223,6 +1229,7 @@ function collectGlobalHeaderFooter() {
     g.header.ctaStyle = document.getElementById("gh-ctaStyle")?.value || "soft";
     g.footer.copyright = document.getElementById("gf-copyright")?.value || "";
     g.footer.tagline = document.getElementById("gf-tagline")?.value || "";
+    g.footer.legalNote = document.getElementById("gf-legalNote")?.value || "";
     g.footer.showAdminLink = document.getElementById("gf-showAdmin")?.checked ?? true;
     g.footer.adminLinkLabel = document.getElementById("gf-adminLabel")?.value || "Inhalte pflegen";
     g.footer.links = (g.footer.links || []).map((_, i) => ({

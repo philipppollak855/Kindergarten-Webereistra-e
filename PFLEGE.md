@@ -44,8 +44,14 @@ Hinweis: Hochgeladene Bilder werden im Browser gespeichert. Für die Live-Websit
 ## Header & Footer (Tab „Globale Daten")
 
 - **Header:** Marke, Logo, Navigation ein/aus, Sticky, optionaler Button
-- **Footer:** Copyright, Zusatzzeile, Links (Impressum, Datenschutz, …) anlegen/umsortieren
-- Seiten **Impressum** und **Datenschutz** im Seiten-Builder bearbeiten
+- **Footer:** Copyright, Trägerzeile, rechtlicher Hinweis, Links (Impressum, Datenschutz, …)
+
+## Rechtstexte (österreichisches Recht)
+
+- Seiten **Impressum** und **Datenschutz** im Tab **Seiten & Module** (⚖️-Kennzeichnung)
+- Vorlage gemäß ECG, MedienG, DSGVO und DSG – **jedes Textmodul einzeln bearbeitbar**
+- Abschnitte: Medieninhaber, Haftung, Urheberrecht, Verwaltungsbeschwerde, Betroffenenrechte, DSB usw.
+- Bei Website-Änderungen (Formulare, Tracking) Texte anpassen; ggf. Rechtsberatung des Trägers
 
 ## Design anpassen (Tab „Design")
 

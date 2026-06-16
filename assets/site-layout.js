@@ -31,6 +31,7 @@ function ensureLayoutConfig(site) {
     if (!Array.isArray(g.footer.links)) g.footer.links = structuredClone(DEFAULT_FOOTER_LINKS);
     if (g.footer.showAdminLink === undefined) g.footer.showAdminLink = true;
     if (!g.footer.adminLinkLabel) g.footer.adminLinkLabel = "Inhalte pflegen";
+    if (g.footer.legalNote === undefined) g.footer.legalNote = "";
 
     if (!g.header || typeof g.header !== "object") {
         g.header = {
@@ -88,6 +89,9 @@ function renderSiteFooterHtml(site) {
     const tagline = footer.tagline
         ? `<p class="footer-tagline">${escapeHtml(footer.tagline)}</p>`
         : "";
+    const legalNote = footer.legalNote
+        ? `<p class="footer-legal">${escapeHtml(footer.legalNote)}</p>`
+        : "";
     const admin = footer.showAdminLink
         ? `<p class="footer-admin"><a href="admin.html">${escapeHtml(footer.adminLinkLabel || "Inhalte pflegen")}</a></p>`
         : "";
@@ -96,6 +100,7 @@ function renderSiteFooterHtml(site) {
         ${renderFooterLinksHtml(footer)}
         <p class="footer-copyright">${escapeHtml(footer.copyright || "")}</p>
         ${tagline}
+        ${legalNote}
         ${admin}
     </div>`;
 }

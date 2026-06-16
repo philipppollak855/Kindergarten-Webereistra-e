@@ -633,6 +633,160 @@ h1 {
     margin-bottom: 18px;
 }
 
+/* Speiseplan */
+.speiseplan-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.speiseplan-view-toggle {
+    display: inline-flex;
+    background: var(--wood-100);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.speiseplan-view-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    color: var(--wood-700);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.speiseplan-view-btn.active {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.speiseplan-plan-nav,
+.speiseplan-week-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.speiseplan-plan-meta {
+    text-align: center;
+    min-width: 180px;
+}
+
+.speiseplan-plan-meta strong {
+    display: block;
+    color: var(--wood-800);
+}
+
+.speiseplan-plan-meta small {
+    color: #777;
+}
+
+.speiseplan-nav-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #e8e0d8;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--wood-700);
+    font-family: inherit;
+}
+
+.speiseplan-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.speiseplan-table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    background: #fff;
+}
+
+.speiseplan-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+}
+
+.speiseplan-table th,
+.speiseplan-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ebe6;
+    vertical-align: top;
+    text-align: left;
+}
+
+.speiseplan-corner {
+    width: 110px;
+    background: var(--wood-50, #faf7f4);
+}
+
+.speiseplan-meal-label {
+    font-weight: 700;
+    color: var(--wood-700);
+    background: var(--wood-50, #faf7f4);
+    white-space: nowrap;
+}
+
+.speiseplan-day-head {
+    text-align: center;
+    background: var(--mint);
+}
+
+.speiseplan-day-head.speiseplan-today {
+    background: linear-gradient(180deg, var(--apricot), var(--mint));
+}
+
+.speiseplan-weekday {
+    display: block;
+    font-weight: 800;
+    color: var(--wood-800);
+    text-transform: capitalize;
+}
+
+.speiseplan-date {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.speiseplan-table td.speiseplan-today {
+    background: rgba(255, 230, 200, 0.25);
+}
+
+.speiseplan-empty-cell {
+    color: #bbb;
+}
+
+.speiseplan-empty {
+    text-align: center;
+    color: #777;
+    padding: 24px;
+    background: var(--wood-100);
+    border-radius: 12px;
+}
+
+@media (max-width: 720px) {
+    .speiseplan-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .speiseplan-plan-nav {
+        justify-content: center;
+    }
+}
+
 .mod-bg-white { background: #fff; padding: 24px 0; border-radius: 20px; }
 .mod-bg-mint { background: var(--mint); padding: 24px 0; border-radius: 20px; }
 .mod-bg-wood { background: var(--wood-100); padding: 24px 0; border-radius: 20px; }
@@ -881,6 +1035,13 @@ footer {
     font-size: 0.85rem;
     color: #8a959c;
     margin: 0;
+}
+
+.footer-legal {
+    font-size: 0.78rem;
+    color: #9aa3a9;
+    margin: 0;
+    max-width: 52ch;
 }
 
 .footer-admin {

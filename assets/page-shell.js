@@ -46,6 +46,7 @@ function bootPage() {
         root.innerHTML = renderPage(site, pageId);
     initPageCarousels(root);
     initKalenderModules(root, site);
+    if (typeof initSpeiseplanModules === "function") initSpeiseplanModules(root, site);
     initPageTabs(root);
 
         if (typeof initReveal === "function") initReveal(root);
